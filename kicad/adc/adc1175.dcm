@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ADC1175
+D Fast ADC  (20 Mhz), TSSOP-24
+K ADC
+F http://www.ti.com/lit/ds/symlink/adc1175.pdf
+$ENDCMP
+#
+#End Doc Library
