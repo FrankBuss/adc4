@@ -1,0 +1,6 @@
+DATE = "16:19:00 December 21, 2016"
+QUARTUS_VERSION = "16.0.2"
+
+# Revisions
+
+PROJECT_REVISION = "DDR3_RTL"

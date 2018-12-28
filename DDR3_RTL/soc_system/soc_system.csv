@@ -1,0 +1,30 @@
+# system info soc_system on 2018.12.26.19:10:19
+system_info:
+name,value
+DEVICE,5CSEBA6U23I7
+DEVICE_FAMILY,Cyclone V
+GENERATION_ID,1545847789
+#
+#
+# Files generated for soc_system on 2018.12.26.19:10:19
+files:
+filepath,kind,attributes,module,is_top
+simulation/soc_system.v,VERILOG,,soc_system,true
+simulation/submodules/soc_system_ddr3.v,VERILOG,,soc_system_ddr3,false
+simulation/submodules/soc_system_pll.vo,VERILOG,,soc_system_pll,false
+simulation/submodules/altera_address_span_extender.sv,SYSTEM_VERILOG,,altera_address_span_extender,false
+simulation/submodules/soc_system_ddr3_hps.v,VERILOG,,soc_system_ddr3_hps,false
+#
+# Map from instance-path to kind of module
+instances:
+instancePath,module
+soc_system.ddr3,soc_system_ddr3
+soc_system.ddr3.address_span_extender_0,altera_address_span_extender
+soc_system.ddr3.hps,soc_system_ddr3_hps
+soc_system.ddr3.hps.fpga_interfaces,soc_system_ddr3_hps_fpga_interfaces
+soc_system.ddr3.hps.hps_io,soc_system_ddr3_hps_hps_io
+soc_system.ddr3.hps_reset_manager_0,soc_system_ddr3_hps_reset_manager_0
+soc_system.ddr3.mm_interconnect_0,soc_system_ddr3_mm_interconnect_0
+soc_system.ddr3.rst_controller,altera_reset_controller
+soc_system.ddr3.rst_controller_001,altera_reset_controller
+soc_system.pll,soc_system_pll

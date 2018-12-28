@@ -1,0 +1,137 @@
+Info: Starting: Create simulation model
+Info: qsys-generate W:\projects\adc4\DDR3_RTL\soc_system.qsys --simulation=VERILOG --allow-mixed-language-simulation --output-directory=W:\projects\adc4\DDR3_RTL\soc_system\simulation --family="Cyclone V" --part=5CSEBA6U23I7
+Progress: Loading DDR3_RTL/soc_system.qsys
+Progress: Reading input file
+Progress: Adding clk_50 [clock_source 18.1]
+Progress: Parameterizing module clk_50
+Progress: Adding ddr3 [terasic_hps_ddr3 1.0]
+Progress: Parameterizing module ddr3
+Progress: Adding pll [altera_pll 18.1]
+Progress: Parameterizing module pll
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: soc_system.ddr3.hps: HPS Main PLL counter settings: n = 0  m = 63
+Info: soc_system.ddr3.hps: HPS peripherial PLL counter settings: n = 0  m = 39
+Warning: soc_system.ddr3.hps: set_interface_assignment: Interface "hps_io" does not exist
+Info: soc_system.pll: The legal reference clock frequency is 5.0 MHz..700.0 MHz
+Info: soc_system.pll: Able to implement PLL with user settings
+Warning: soc_system.: You have exported the interface ddr3.hps_f2h_sdram0_data but not its associated reset interface.  Export the driver(s) of ddr3.h2f_reset
+Info: soc_system: Generating soc_system "soc_system" for SIM_VERILOG
+Info: Interconnect is inserted between master address_span_extender_0.expanded_master and slave hps.f2h_sdram0_data because the master has address signal 32 bit wide, but the slave is 28 bit wide.
+Info: Interconnect is inserted between master address_span_extender_0.expanded_master and slave hps.f2h_sdram0_data because the master has burstcount signal 9 bit wide, but the slave is 8 bit wide.
+Info: ddr3: "soc_system" instantiated terasic_hps_ddr3 "ddr3"
+Info: pll: Generating simgen model
+Info: pll: Info: ******************************************************************* Info: Running Quartus Prime Shell     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition     Info: Copyright (C) 2018  Intel Corporation. All rights reserved.     Info: Your use of Intel Corporation's design tools, logic functions      Info: and other software and tools, and its AMPP partner logic      Info: functions, and any output files from any of the foregoing      Info: (including device programming or simulation files), and any      Info: associated documentation or information are expressly subject      Info: to the terms and conditions of the Intel Program License      Info: Subscription Agreement, the Intel Quartus Prime License Agreement,     Info: the Intel FPGA IP License Agreement, or other applicable license     Info: agreement, including, without limitation, that your use is for     Info: the sole purpose of programming logic devices manufactured by     Info: Intel and sold by Intel or its authorized distributors.  Please     Info: refer to the applicable agreement for further details.     Info: Processing started: Wed Dec 26 19:10:03 2018 Info: Command: quartus_sh -t run_simgen_cmd.tcl Info: ******************************************************************* Info: Running Quartus Prime Analysis & Synthesis     Info: Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition     Info: Copyright (C) 2018  Intel Corporation. All rights reserved.     Info: Your use of Intel Corporation's design tools, logic functions      Info: and other software and tools, and its AMPP partner logic      Info: functions, and any output files from any of the foregoing      Info: (including device programming or simulation files), and any      Info: associated documentation or information are expressly subject      Info: to the terms and conditions of the Intel Program License      Info: Subscription Agreement, the Intel Quartus Prime License Agreement,     Info: the Intel FPGA IP License Agreement, or other applicable license     Info: agreement, including, without limitation, that your use is for     Info: the sole purpose of programming logic devices manufactured by     Info: Intel and sold by Intel or its authorized distributors.  Please     Info: refer to the applicable agreement for further details.     Info: Processing started: Wed Dec 26 19:10:04 2018 Info: Command: quartus_map soc_system_pll.qpf --simgen --ini=disable_check_quartus_compatibility_qsys_only=on --simgen_parameter=CBX_HDL_LANGUAGE=VERILOG Info (20034): Auto device selection is not supported for Cyclone V device family. The default device, 5CGXFC7C7F23C8, is set. Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance. Info (20030): Parallel compilation is enabled and will use 2 of the 2 processors detected Info (12021): Found 1 design units, including 1 entities, in source file soc_system_pll.v     Info (12023): Found entity 1: soc_system_pll File: C:/Users/frank/AppData/Local/Temp/alt7891_4090844803361801123.dir/0002_pll_gen/soc_system_pll.v Line: 2 Info (12127): Elaborating entity "soc_system_pll" for the top level hierarchy Info (12128): Elaborating entity "altera_pll" for hierarchy "altera_pll:altera_pll_i" File: C:/Users/frank/AppData/Local/Temp/alt7891_4090844803361801123.dir/0002_pll_gen/soc_system_pll.v Line: 85 Info (10008): Verilog HDL or VHDL information: EDA Netlist Writer cannot regroup multidimensional array "wire_to_nowhere_64" into its bus Info (12130): Elaborated megafunction instantiation "altera_pll:altera_pll_i" File: C:/Users/frank/AppData/Local/Temp/alt7891_4090844803361801123.dir/0002_pll_gen/soc_system_pll.v Line: 85 Info (12133): Instantiated megafunction "altera_pll:altera_pll_i" with the following parameter: File: C:/Users/frank/AppData/Local/Temp/alt7891_4090844803361801123.dir/0002_pll_gen/soc_system_pll.v Line: 85     Info (12134): Parameter "fractional_vco_multiplier" = "false"     Info (12134): Parameter "reference_clock_frequency" = "50.0 MHz"     Info (12134): Parameter "operation_mode" = "direct"     Info (12134): Parameter "number_of_clocks" = "1"     Info (12134): Parameter "output_clock_frequency0" = "100.000000 MHz"     Info (12134): Parameter "phase_shift0" = "0 ps"     Info (12134): Parameter "duty_cycle0" = "50"     Info (12134): Parameter "output_clock_frequency1" = "0 MHz"     Info (12134): Parameter "phase_shift1" = "0 ps"     Info (12134): Parameter "duty_cycle1" = "50"     Info (12134): Parameter "output_clock_frequency2" = "0 MHz"     Info (12134): Parameter "phase_shift2" = "0 ps"     Info (12134): Parameter "duty_cycle2" = "50"     Info (12134): Parameter "output_clock_frequency3" = "0 MHz"     Info (12134): Parameter "phase_shift3" = "0 ps"     Info (12134): Parameter "duty_cycle3" = "50"     Info (12134): Parameter "output_clock_frequency4" = "0 MHz"     Info (12134): Parameter "phase_shift4" = "0 ps"     Info (12134): Parameter "duty_cycle4" = "50"     Info (12134): Parameter "output_clock_frequency5" = "0 MHz"     Info (12134): Parameter "phase_shift5" = "0 ps"     Info (12134): Parameter "duty_cycle5" = "50"     Info (12134): Parameter "output_clock_frequency6" = "0 MHz"     Info (12134): Parameter "phase_shift6" = "0 ps"     Info (12134): Parameter "duty_cycle6" = "50"     Info (12134): Parameter "output_clock_frequency7" = "0 MHz"     Info (12134): Parameter "phase_shift7" = "0 ps"     Info (12134): Parameter "duty_cycle7" = "50"     Info (12134): Parameter "output_clock_frequency8" = "0 MHz"     Info (12134): Parameter "phase_shift8" = "0 ps"     Info (12134): Parameter "duty_cycle8" = "50"     Info (12134): Parameter "output_clock_frequency9" = "0 MHz"     Info (12134): Parameter "phase_shift9" = "0 ps"     Info (12134): Parameter "duty_cycle9" = "50"     Info (12134): Parameter "output_clock_frequency10" = "0 MHz"     Info (12134): Parameter "phase_shift10" = "0 ps"     Info (12134): Parameter "duty_cycle10" = "50"     Info (12134): Parameter "output_clock_frequency11" = "0 MHz"     Info (12134): Parameter "phase_shift11" = "0 ps"     Info (12134): Parameter "duty_cycle11" = "50"     Info (12134): Parameter "output_clock_frequency12" = "0 MHz"     Info (12134): Parameter "phase_shift12" = "0 ps"     Info (12134): Parameter "duty_cycle12" = "50"     Info (12134): Parameter "output_clock_frequency13" = "0 MHz"     Info (12134): Parameter "phase_shift13" = "0 ps"     Info (12134): Parameter "duty_cycle13" = "50"     Info (12134): Parameter "output_clock_frequency14" = "0 MHz"     Info (12134): Parameter "phase_shift14" = "0 ps"     Info (12134): Parameter "duty_cycle14" = "50"     Info (12134): Parameter "output_clock_frequency15" = "0 MHz"     Info (12134): Parameter "phase_shift15" = "0 ps"     Info (12134): Parameter "duty_cycle15" = "50"     Info (12134): Parameter "output_clock_frequency16" = "0 MHz"     Info (12134): Parameter "phase_shift16" = "0 ps"     Info (12134): Parameter "duty_cycle16" = "50"     Info (12134): Parameter "output_clock_frequency17" = "0 MHz"     Info (12134): Parameter "phase_shift17" = "0 ps"     Info (12134): Parameter "duty_cycle17" = "50"     Info (12134): Parameter "pll_type" = "General"     Info (12134): Parameter "pll_subtype" = "General" Info (281010): Generating sgate simulator netlist using Simgen SIMGEN_PROGRESS Start of Model generation -- 0% complete SIMGEN_PROGRESS Phase 1 : Internal Objects created -- 25% complete SIMGEN_PROGRESS Phase 2 : Connections between internal objects made -- 60% complete SIMGEN_PROGRESS Phase 3 : Netlist generated -- 100% complete Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 1 warning     Info: Peak virtual memory: 4789 megabytes     Info: Processing ended: Wed Dec 26 19:10:14 2018     Info: Elapsed time: 00:00:10     Info: Total CPU time (on all processors): 00:00:01 Info (23030): Evaluation of Tcl script run_simgen_cmd.tcl was successful Info: Quartus Prime Shell was successful. 0 errors, 0 warnings     Info: Peak virtual memory: 4636 megabytes     Info: Processing ended: Wed Dec 26 19:10:14 2018     Info: Elapsed time: 00:00:11     Info: Total CPU time (on all processors): 00:00:02
+Info: pll: Simgen was successful
+Info: pll: "soc_system" instantiated altera_pll "pll"
+Info: address_span_extender_0: "ddr3" instantiated altera_address_span_extender "address_span_extender_0"
+Info: hps: "Running  for module: hps"
+Info: hps: HPS Main PLL counter settings: n = 0  m = 63
+Info: hps: HPS peripherial PLL counter settings: n = 0  m = 39
+Warning: hps: set_interface_assignment: Interface "hps_io" does not exist
+Info: hps: "ddr3" instantiated altera_hps "hps"
+Error: hps_reset_manager_0: hps_reset_manager does not support generation for Verilog Simulation. Generation is available for: Quartus Synthesis.
+Error: Generation stopped, 5 or more modules remaining
+Info: soc_system: Done "soc_system" with 10 modules, 5 files
+Error: qsys-generate failed with exit code 1: 2 Errors, 3 Warnings
+Info: Finished: Create simulation model
+Info: Starting: Create Modelsim Project.
+Info: sim-script-gen --spd=W:\projects\adc4\DDR3_RTL\soc_system\soc_system.spd --output-directory=W:/projects/adc4/DDR3_RTL/soc_system/simulation/ --use-relative-paths=true
+Info: Doing: ip-make-simscript --spd=W:\projects\adc4\DDR3_RTL\soc_system\soc_system.spd --output-directory=W:/projects/adc4/DDR3_RTL/soc_system/simulation/ --use-relative-paths=true
+Info: Generating the following file(s) for MODELSIM simulator in W:/projects/adc4/DDR3_RTL/soc_system/simulation/ directory:
+Info: 	mentor/msim_setup.tcl
+Info: Generating the following file(s) for VCS simulator in W:/projects/adc4/DDR3_RTL/soc_system/simulation/ directory:
+Info: 	synopsys/vcs/vcs_setup.sh
+Info: Generating the following file(s) for VCSMX simulator in W:/projects/adc4/DDR3_RTL/soc_system/simulation/ directory:
+Info: 	synopsys/vcsmx/synopsys_sim.setup
+Info: 	synopsys/vcsmx/vcsmx_setup.sh
+Info: Generating the following file(s) for NCSIM simulator in W:/projects/adc4/DDR3_RTL/soc_system/simulation/ directory:
+Info: 	cadence/cds.lib
+Info: 	cadence/hdl.var
+Info: 	cadence/ncsim_setup.sh
+Info: 	4 .cds.lib files in cadence/cds_libs/ directory
+Info: Generating the following file(s) for RIVIERA simulator in W:/projects/adc4/DDR3_RTL/soc_system/simulation/ directory:
+Info: 	aldec/rivierapro_setup.tcl
+Info: For information on how to simulate your IP, see the explanatory comments in the simulator-specific subdirectories under W:/projects/adc4/DDR3_RTL/soc_system/simulation/.
+Info: Regenerate these scripts whenever you make any change to any Quartus-generated IP in your project.
+Info: Finished: Create Modelsim Project.
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate W:\projects\adc4\DDR3_RTL\soc_system.qsys --block-symbol-file --output-directory=W:\projects\adc4\DDR3_RTL\soc_system --family="Cyclone V" --part=5CSEBA6U23I7
+Progress: Loading DDR3_RTL/soc_system.qsys
+Progress: Reading input file
+Progress: Adding clk_50 [clock_source 18.1]
+Progress: Parameterizing module clk_50
+Progress: Adding ddr3 [terasic_hps_ddr3 1.0]
+Progress: Parameterizing module ddr3
+Progress: Adding pll [altera_pll 18.1]
+Progress: Parameterizing module pll
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: soc_system.ddr3.hps: HPS Main PLL counter settings: n = 0  m = 63
+Info: soc_system.ddr3.hps: HPS peripherial PLL counter settings: n = 0  m = 39
+Warning: soc_system.ddr3.hps: set_interface_assignment: Interface "hps_io" does not exist
+Info: soc_system.pll: The legal reference clock frequency is 5.0 MHz..700.0 MHz
+Info: soc_system.pll: Able to implement PLL with user settings
+Warning: soc_system.: You have exported the interface ddr3.hps_f2h_sdram0_data but not its associated reset interface.  Export the driver(s) of ddr3.h2f_reset
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate W:\projects\adc4\DDR3_RTL\soc_system.qsys --synthesis=VERILOG --output-directory=W:\projects\adc4\DDR3_RTL\soc_system\synthesis --family="Cyclone V" --part=5CSEBA6U23I7
+Progress: Loading DDR3_RTL/soc_system.qsys
+Progress: Reading input file
+Progress: Adding clk_50 [clock_source 18.1]
+Progress: Parameterizing module clk_50
+Progress: Adding ddr3 [terasic_hps_ddr3 1.0]
+Progress: Parameterizing module ddr3
+Progress: Adding pll [altera_pll 18.1]
+Progress: Parameterizing module pll
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: soc_system.ddr3.hps: HPS Main PLL counter settings: n = 0  m = 63
+Info: soc_system.ddr3.hps: HPS peripherial PLL counter settings: n = 0  m = 39
+Warning: soc_system.ddr3.hps: set_interface_assignment: Interface "hps_io" does not exist
+Info: soc_system.pll: The legal reference clock frequency is 5.0 MHz..700.0 MHz
+Info: soc_system.pll: Able to implement PLL with user settings
+Warning: soc_system.: You have exported the interface ddr3.hps_f2h_sdram0_data but not its associated reset interface.  Export the driver(s) of ddr3.h2f_reset
+Info: soc_system: Generating soc_system "soc_system" for QUARTUS_SYNTH
+Info: Interconnect is inserted between master address_span_extender_0.expanded_master and slave hps.f2h_sdram0_data because the master has address signal 32 bit wide, but the slave is 28 bit wide.
+Info: Interconnect is inserted between master address_span_extender_0.expanded_master and slave hps.f2h_sdram0_data because the master has burstcount signal 9 bit wide, but the slave is 8 bit wide.
+Info: ddr3: "soc_system" instantiated terasic_hps_ddr3 "ddr3"
+Info: pll: "soc_system" instantiated altera_pll "pll"
+Info: address_span_extender_0: "ddr3" instantiated altera_address_span_extender "address_span_extender_0"
+Info: hps: "Running  for module: hps"
+Info: hps: HPS Main PLL counter settings: n = 0  m = 63
+Info: hps: HPS peripherial PLL counter settings: n = 0  m = 39
+Warning: hps: set_interface_assignment: Interface "hps_io" does not exist
+Info: hps: "ddr3" instantiated altera_hps "hps"
+Info: hps_reset_manager_0: "ddr3" instantiated hps_reset_manager "hps_reset_manager_0"
+Info: avalon_st_adapter: Inserting error_adapter: error_adapter_0
+Info: mm_interconnect_0: "ddr3" instantiated altera_mm_interconnect "mm_interconnect_0"
+Info: rst_controller: "ddr3" instantiated altera_reset_controller "rst_controller"
+Info: fpga_interfaces: "hps" instantiated altera_interface_generator "fpga_interfaces"
+Info: hps_io: "hps" instantiated altera_hps_io "hps_io"
+Info: address_span_extender_0_expanded_master_translator: "mm_interconnect_0" instantiated altera_merlin_master_translator "address_span_extender_0_expanded_master_translator"
+Info: hps_f2h_sdram0_data_translator: "mm_interconnect_0" instantiated altera_merlin_slave_translator "hps_f2h_sdram0_data_translator"
+Info: address_span_extender_0_expanded_master_agent: "mm_interconnect_0" instantiated altera_merlin_master_agent "address_span_extender_0_expanded_master_agent"
+Info: hps_f2h_sdram0_data_agent: "mm_interconnect_0" instantiated altera_merlin_slave_agent "hps_f2h_sdram0_data_agent"
+Info: hps_f2h_sdram0_data_agent_rsp_fifo: "mm_interconnect_0" instantiated altera_avalon_sc_fifo "hps_f2h_sdram0_data_agent_rsp_fifo"
+Info: router: "mm_interconnect_0" instantiated altera_merlin_router "router"
+Info: router_001: "mm_interconnect_0" instantiated altera_merlin_router "router_001"
+Info: hps_f2h_sdram0_data_burst_adapter: "mm_interconnect_0" instantiated altera_merlin_burst_adapter "hps_f2h_sdram0_data_burst_adapter"
+Info: cmd_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux"
+Info: cmd_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux"
+Info: rsp_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux"
+Info: Reusing file W:/projects/adc4/DDR3_RTL/soc_system/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: avalon_st_adapter: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter"
+Info: border: "hps_io" instantiated altera_interface_generator "border"
+Info: error_adapter_0: "avalon_st_adapter" instantiated error_adapter "error_adapter_0"
+Info: soc_system: Done "soc_system" with 24 modules, 83 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

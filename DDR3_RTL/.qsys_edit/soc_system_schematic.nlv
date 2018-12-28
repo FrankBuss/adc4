@@ -1,0 +1,71 @@
+# # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
+# 
+preplace inst soc_system.ddr3.hps.scu -pg 1
+preplace inst soc_system.ddr3.hps.dcan0 -pg 1
+preplace inst soc_system.ddr3.hps.dcan1 -pg 1
+preplace inst soc_system.ddr3.hps.arm_a9_0 -pg 1
+preplace inst soc_system.ddr3.hps.f2s_periph_ref_clk -pg 1
+preplace inst soc_system.clk_50 -pg 1 -lvl 2 -y 40
+preplace inst soc_system.ddr3.hps.i2c0 -pg 1
+preplace inst soc_system.ddr3.hps.arm_a9_1 -pg 1
+preplace inst soc_system.ddr3.hps.fpga_interfaces -pg 1
+preplace inst soc_system.ddr3.address_span_extender_0 -pg 1
+preplace inst soc_system.ddr3.hps.nand0 -pg 1
+preplace inst soc_system.ddr3.hps.i2c1 -pg 1
+preplace inst soc_system.ddr3.hps.gpio0 -pg 1
+preplace inst soc_system.ddr3.hps.bridges -pg 1
+preplace inst soc_system.ddr3.hps -pg 1
+preplace inst soc_system.ddr3.clk_50 -pg 1
+preplace inst soc_system.ddr3.hps.sdrctl -pg 1
+preplace inst soc_system.ddr3.hps.i2c2 -pg 1
+preplace inst soc_system.ddr3.hps.gpio1 -pg 1
+preplace inst soc_system.ddr3.hps.sysmgr -pg 1
+preplace inst soc_system.ddr3.hps.eosc1 -pg 1
+preplace inst soc_system.ddr3.hps.hps_io -pg 1
+preplace inst soc_system.ddr3 -pg 1 -lvl 1 -y 90
+preplace inst soc_system.ddr3.hps.timer -pg 1
+preplace inst soc_system.ddr3.hps.axi_ocram -pg 1
+preplace inst soc_system.ddr3.hps.gmac0 -pg 1
+preplace inst soc_system.ddr3.hps.i2c3 -pg 1
+preplace inst soc_system.ddr3.hps.gpio2 -pg 1
+preplace inst soc_system.ddr3.hps.rstmgr -pg 1
+preplace inst soc_system.ddr3.hps.dma -pg 1
+preplace inst soc_system.ddr3.hps.arm_gic_0 -pg 1
+preplace inst soc_system.ddr3.hps.f2s_sdram_ref_clk -pg 1
+preplace inst soc_system.ddr3.hps.eosc2 -pg 1
+preplace inst soc_system.pll -pg 1 -lvl 3 -y 40
+preplace inst soc_system.ddr3.hps.gmac1 -pg 1
+preplace inst soc_system.ddr3.hps.wd_timer0 -pg 1
+preplace inst soc_system.ddr3.hps.timer0 -pg 1
+preplace inst soc_system.ddr3.hps.hps_io.border -pg 1
+preplace inst soc_system -pg 1 -lvl 1 -y 40 -regy -20
+preplace inst soc_system.ddr3.hps.axi_sdram -pg 1
+preplace inst soc_system.ddr3.hps.wd_timer1 -pg 1
+preplace inst soc_system.ddr3.hps.timer1 -pg 1
+preplace inst soc_system.ddr3.hps.uart0 -pg 1
+preplace inst soc_system.ddr3.hps.l3regs -pg 1
+preplace inst soc_system.ddr3.hps.spim0 -pg 1
+preplace inst soc_system.ddr3.hps.timer2 -pg 1
+preplace inst soc_system.ddr3.hps.uart1 -pg 1
+preplace inst soc_system.ddr3.hps.clkmgr -pg 1
+preplace inst soc_system.ddr3.hps.usb0 -pg 1
+preplace inst soc_system.ddr3.hps.spim1 -pg 1
+preplace inst soc_system.ddr3.hps.timer3 -pg 1
+preplace inst soc_system.ddr3.hps.clk_0 -pg 1
+preplace inst soc_system.ddr3.hps.usb1 -pg 1
+preplace inst soc_system.ddr3.hps.fpgamgr -pg 1
+preplace inst soc_system.ddr3.hps.L2 -pg 1
+preplace inst soc_system.ddr3.clock_bridge_0 -pg 1
+preplace inst soc_system.ddr3.hps_reset_manager_0 -pg 1
+preplace inst soc_system.ddr3.hps.sdmmc -pg 1
+preplace inst soc_system.ddr3.hps.qspi -pg 1
+preplace netloc POINT_TO_POINT<net_container>soc_system</net_container>(SLAVE)pll.reset,(MASTER)clk_50.clk_reset) 1 2 1 N
+preplace netloc EXPORT<net_container>soc_system</net_container>(SLAVE)ddr3.hps_f2h_sdram0_data,(SLAVE)soc_system.ddr3_hps_f2h_sdram0_data) 1 0 1 NJ
+preplace netloc EXPORT<net_container>soc_system</net_container>(SLAVE)ddr3.hps_f2h_sdram0_clock,(SLAVE)soc_system.ddr3_hps_f2h_sdram0_clock) 1 0 1 NJ
+preplace netloc EXPORT<net_container>soc_system</net_container>(SLAVE)ddr3.memory,(SLAVE)soc_system.memory) 1 0 1 NJ
+preplace netloc FAN_OUT<net_container>soc_system</net_container>(SLAVE)ddr3.clk,(SLAVE)pll.refclk,(MASTER)clk_50.clk) 1 0 3 200 30 NJ 30 690
+preplace netloc EXPORT<net_container>soc_system</net_container>(MASTER)soc_system.ddr3_clk,(MASTER)pll.outclk0) 1 3 1 N
+preplace netloc EXPORT<net_container>soc_system</net_container>(SLAVE)soc_system.clk,(SLAVE)clk_50.clk_in) 1 0 2 NJ 50 NJ
+preplace netloc POINT_TO_POINT<net_container>soc_system</net_container>(MASTER)ddr3.h2f_reset,(SLAVE)clk_50.clk_in_reset) 1 1 1 490
+levelinfo -pg 1 0 170 930
+levelinfo -hier soc_system 180 350 520 720 850

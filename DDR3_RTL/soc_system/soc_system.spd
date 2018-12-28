@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file
+   path="simulation/submodules/soc_system_ddr3_hps.v"
+   type="VERILOG"
+   library="hps" />
+ <file
+   path="simulation/submodules/altera_address_span_extender.sv"
+   type="SYSTEM_VERILOG"
+   library="address_span_extender_0" />
+ <file
+   path="simulation/submodules/soc_system_pll.vo"
+   type="VERILOG"
+   library="pll" />
+ <file
+   path="simulation/submodules/soc_system_ddr3.v"
+   type="VERILOG"
+   library="ddr3" />
+ <file path="simulation/soc_system.v" type="VERILOG" />
+ <topLevel name="soc_system" />
+ <deviceFamily name="cyclonev" />
+ <modelMap controllerPath="soc_system.ddr3.hps" modelPath="soc_system.ddr3.hps" />
+ <modelMap
+   controllerPath="soc_system.ddr3.hps.fpga_interfaces"
+   modelPath="soc_system.ddr3.hps.fpga_interfaces" />
+ <modelMap
+   controllerPath="soc_system.ddr3.hps.hps_io"
+   modelPath="soc_system.ddr3.hps.hps_io" />
+</simPackage>
