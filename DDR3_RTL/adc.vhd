@@ -180,20 +180,20 @@ begin
 	end process;
 
 	-- ADC 1 to 4
-	gpio0(34) <= not adc_clock;
-	gpio0(27) <= not adc_clock;
-	gpio0(9) <= not adc_clock;
-	gpio0(16) <= not adc_clock;
+	gpio0(34) <= adc_clock;
+	gpio0(27) <= adc_clock;
+	gpio0(9) <= adc_clock;
+	gpio0(16) <= adc_clock;
 	adc_in0 <= gpio0(17) & gpio0(14) & gpio0(15) & gpio0(12) & gpio0(13) & gpio0(10) & gpio0(11) & gpio0(8)
 		& gpio0(6) & gpio0(7) & gpio0(4) & gpio0(5) & gpio0(2) & gpio0(3) & gpio0(0) & gpio0(1)
 		& gpio0(24) & gpio0(25) & gpio0(22) & gpio0(23) & gpio0(20) & gpio0(21) & gpio0(18) & gpio0(19)
 		& gpio0(35) & gpio0(32) & gpio0(33) & gpio0(30) & gpio0(31) & gpio0(28) & gpio0(29) & gpio0(26);
 
 	-- ADC 5 to 8
-	gpio1(34) <= not adc_clock;
-	gpio1(27) <= not adc_clock;
-	gpio1(9) <= not adc_clock;
-	gpio1(16) <= not adc_clock;
+	gpio1(34) <= adc_clock;
+	gpio1(27) <= adc_clock;
+	gpio1(9) <= adc_clock;
+	gpio1(16) <= adc_clock;
 	adc_in1 <= gpio1(17) & gpio1(14) & gpio1(15) & gpio1(12) & gpio1(13) & gpio1(10) & gpio1(11) & gpio1(8)
 		& gpio1(6) & gpio1(7) & gpio1(4) & gpio1(5) & gpio1(2) & gpio1(3) & gpio1(0) & gpio1(1)
 		& gpio1(24) & gpio1(25) & gpio1(22) & gpio1(23) & gpio1(20) & gpio1(21) & gpio1(18) & gpio1(19)
