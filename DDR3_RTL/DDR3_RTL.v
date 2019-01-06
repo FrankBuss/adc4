@@ -157,8 +157,8 @@ wire next_data;
 adc adc_inst(
 		.iCLK(FPGA_CLK2_50),
 		.iRST_n(Debounce_KEY0),
-		.rxd(ARDUINO_IO[1]),
-		.txd(ARDUINO_IO[0]),
+		.rxd(ARDUINO_IO[9]),
+		.txd(ARDUINO_IO[8]),
 
 		.ram_start_sequence(start_sequence),
 		.ram_read_sequence(read_sequence),
@@ -209,15 +209,6 @@ always @ (posedge FPGA_CLK2_50)
 begin
 	heart_beat <= heart_beat + 1;
 end
-
-reg [7:0] test;
-
-always @ (posedge DDR3_CLK)
-begin
-	test <= test + 1;
-end
-
-assign ARDUINO_IO[3] = test[7];
 
 
 endmodule

@@ -5,26 +5,62 @@ import time
 import zipfile
 import io
 import struct
+import crc8
 
 def write_uint32(w):
     ser.write([(w >> 24) & 0xff, (w >> 16) & 0xff, (w >> 8) & 0xff, w & 0xff])
 
-ser = serial.Serial('/dev/ttyUSB0', 500000, timeout=5)
+ser = serial.Serial('/dev/ttyUSB0', 1000000, timeout=5)
 
-# cancel any previous transfer and sync communication
-ser.write('......'.encode())
+samplerate_divider = 0
+ignore = 512
+
+def read_block(start_address, sample_count):
+    sample_count = sample_count + ignore
+    ser.timeout = 0.1
+    checksum_error = ""
+    for t in range(3):
+        ser.write('r'.encode())
+        start_address = start_address
+        write_uint32(start_address)
+        write_uint32(sample_count)
+        data = b""
+        while True:
+            d = ser.read(100000)
+            if len(d) == 0: break
+            data = data + d
+        if len(data) == 0:
+            raise Exception('no data')
+
+        # test checksum
+        crc8.init()
+        for i in range(len(data) - 1):
+            crc8.update(data[i])
+        checksum = data[len(data) - 1]
+        if crc8.checksum != checksum:
+            print('CRC8 error, expected CRC8: %02x, actuacl CRC8: %02x' % (crc8.checksum, checksum))
+        else:
+            return data[ignore * 4:len(data) - 1]
+    raise Exception('3 times checksum error')
 
 # record data and read
 def record_and_read(sample_count, testing = False):
     ser.timeout = sample_count * 4 * 8 / ser.baudrate * 2
     
+    # cancel any previous transfer and sync communication
+    ser.write('............'.encode())
+    
+    # set samplerate divider
+    ser.write('d'.encode())
+    ser.write([samplerate_divider])
+
     # start recording, use 't' for internal DDR RAM test
     print("start recording...")
     if testing:
         ser.write('t'.encode())
     else:
         ser.write('s'.encode())
-    write_uint32(sample_count)
+    write_uint32(sample_count + ignore)
 
     # wait until done
     x = ser.read()
@@ -32,20 +68,19 @@ def record_and_read(sample_count, testing = False):
         raise Exception('timeout')
     print("recording done")
        
-    # read back the data
-    ser.timeout = 0.1
-    ser.write('r'.encode())
-    write_uint32(sample_count)
+    # read the data in blocks of 10240 bytes
     data = b""
+    start_address = 0
+    block_size = 10240
     i = 0
-    while True:
-        d = ser.read(100000)
-        if len(d) == 0: break
-        data = data + d
+    while len(data) < sample_count * 4:
+        data = data + read_block(start_address, block_size)
+        start_address = start_address + block_size
         if len(data) // 1000000 > i:
             i = i + 1
             print("%d million bytes read" % i)
-    return data
+
+    return data[:sample_count * 4]
 
 def to_float_bytes(data):
     return struct.pack('%sf' % len(data), *data)
@@ -71,7 +106,7 @@ def save_as_sigrok(filename, volts):
         meta = meta + 'sigrok version=0.5.1\n'
         meta = meta + '\n'
         meta = meta + '[device 1]\n'
-        meta = meta + 'samplerate=25 MHz\n'
+        meta = meta + "samplerate=%d MHz\n" % (25 / (samplerate_divider + 1))
         meta = meta + 'total analog=4\n'
         for i in range(4):
             c = i + 1
@@ -92,5 +127,5 @@ def save_as_csv(filename, volts):
         f.write('"CH1","CH2","CH3","CH4"')
         f.write("\n")
         for vs in volts:
-            f.write(",".join(map(str,d)))
+            f.write(",".join(map(str, vs)))
             f.write("\n")

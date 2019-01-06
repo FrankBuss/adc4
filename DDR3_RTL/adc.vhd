@@ -1,7 +1,11 @@
 -- RS232 protocol:
--- 's' starts measurement
--- '.' is sent back when measurement is done
--- 'r' starts read back the measurement, as binary data
+-- 's' start measurement. Argument: uint32 number of samples
+-- 't' start RAM test. Arguments: uint32 number of samples
+-- '.' is sent back when measurement or RAM test is done
+-- 'r' starts read back the measurement, as binary data. Arguments:
+--     uint32 start address
+--     uint32 number of samples
+--     returns one additional byte for CRC8 checksum
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -36,7 +40,7 @@ architecture Behavior of adc is
 	subtype byte is unsigned(7 downto 0);
 
 	constant system_speed : natural := 50e6;
-	constant baudrate : natural := 500000;
+	constant baudrate : natural := 1000000;
 
 	signal rs232_receiver_dat : byte;
 	signal rs232_receiver_stb : std_logic;
@@ -47,11 +51,14 @@ architecture Behavior of adc is
 
 	type state_type is (
 		wait_for_byte,
+		read_samplerate_divider,
+		read_address,
 		read_sample_count,
 		start_measurement,
 		measure,
 		start_read,
 		read_data,
+		send_checksum,
 		dbuffer);
 
 	signal state : state_type;
@@ -69,14 +76,27 @@ architecture Behavior of adc is
 	signal buffer_data : unsigned(DATA_W - 1 downto 0);
 
 	signal adc_clock : std_logic;
+	signal old_clock : std_logic;
 	signal adc_in0 : std_logic_vector(31 downto 0);
 	signal adc_in1 : std_logic_vector(31 downto 0);
+
+	signal read_delay : std_logic;
 
 	signal testcounter : unsigned(31 downto 0);
 
 	signal max_sample_count : unsigned(31 downto 0);
 
 	signal i_ram_writedata : STD_LOGIC_VECTOR(DATA_W - 1 downto 0);
+
+	signal samplerate_divider : byte;
+	signal samplerate_divider_counter : byte;
+	
+	signal address : unsigned(31 downto 0);
+
+	signal crc8_init : std_logic;
+	signal crc8_update : std_logic;
+	signal crc8_data : byte;
+	signal crc8_checksum : byte;
 
 begin
 
@@ -99,6 +119,14 @@ begin
 			stb_o => rs232_receiver_stb,
 			rx => rxd);
 
+	crc8_inst : entity crc8
+		port map(
+			iCLK => iCLK,
+			init => crc8_init,
+			update => crc8_update,
+			data => crc8_data,
+			checksum => crc8_checksum);
+
 	process (iCLK)
 	begin
 		if rising_edge(iCLK) then
@@ -106,14 +134,29 @@ begin
 				-- the reset signal, and any incoming transfer, resets the state machine
 				state <= wait_for_byte;
 				ram_start_sequence <= '0';
+				samplerate_divider <= (others => '0');
 			else
 				rs232_sender_stb <= '0';
 				ram_next_data <= '0';
+				crc8_update <= '0';
+				crc8_init <= '0';
 
-				if adc_clock = '0' then
-					adc_clock <= '1';
+				if samplerate_divider_counter > 0 then
+					samplerate_divider_counter <= samplerate_divider_counter - 1;
 				else
-					adc_clock <= '0';
+					if adc_clock = '0' then
+						adc_clock <= '1';
+					else
+						adc_clock <= '0';
+					end if;
+					samplerate_divider_counter <= samplerate_divider;
+				end if;
+				old_clock <= adc_clock;
+				
+				if read_delay = '0' then
+					read_delay <= '1';
+				else
+					read_delay <= '0';
 				end if;
 
 				case state is
@@ -121,26 +164,47 @@ begin
 						if rs232_receiver_stb = '1' then
 							samplecounter <= to_unsigned(1, ADDR_W);
 							ram_start_address <= (others => '0');
-							ram_start_sequence <= '1';
 							counter <= 4;
 							case rs232_receiver_dat is
 								when char_to_byte('s') =>
 									ram_read_sequence <= '0';
 									testcounter <= (others => '0');
+									ram_start_sequence <= '1';
 									command <= start_measurement;
 									state <= read_sample_count;
 								when char_to_byte('t') =>
 									ram_read_sequence <= '0';
 									testcounter <= x"00000042";
+									ram_start_sequence <= '1';
 									command <= start_measurement;
 									state <= read_sample_count;
 								when char_to_byte('r') =>
-									ram_read_sequence <= '1';
+									crc8_init <= '1';
 									command <= start_read;
-									state <= read_sample_count;
+									state <= read_address;
+								when char_to_byte('d') =>
+									state <= read_samplerate_divider;
 								when others =>
 									ram_start_sequence <= '0';
 							end case;
+						end if;
+					when read_samplerate_divider =>
+						if rs232_receiver_stb = '1' then
+							samplerate_divider <= rs232_receiver_dat;
+							state <= wait_for_byte;
+						end if;
+					when read_address =>
+						if counter = 0 then
+							counter <= 4;
+							ram_read_sequence <= '1';
+							ram_start_sequence <= '1';
+							ram_start_address <= std_logic_vector(address(ADDR_W - 1 downto 0));
+							state <= read_sample_count;
+						else
+							if rs232_receiver_stb = '1' then
+								address <= address(23 downto 0) & rs232_receiver_dat;
+								counter <= counter - 1;
+							end if;
 						end if;
 					when read_sample_count =>
 						if counter = 0 then
@@ -162,7 +226,7 @@ begin
 							ram_start_sequence <= '0';
 							state <= wait_for_byte;
 						else
-							if adc_clock = '1' then
+							if adc_clock = '1' and old_clock = '0' then
 								if testcounter = x"00000000" then
 									ram_writedata <= i_ram_writedata;
 									i_ram_writedata <= std_logic_vector(to_unsigned(0, 64)) & adc_in1 & adc_in0;
@@ -175,7 +239,7 @@ begin
 							end if;
 						end if;
 					when start_read =>
-						if adc_clock = '1' then
+						if read_delay = '1' then
 							if ram_start_ready = '1' then
 								ram_next_data <= '1';
 								counter <= 4;
@@ -183,10 +247,12 @@ begin
 							end if;
 						end if;
 					when read_data =>
-						if adc_clock = '1' then
+						if read_delay = '1' then
 							if counter > 0 then
 								if rs232_sender_busy = '0' then
 									rs232_sender_dat <= buffer_data(7 downto 0);
+									crc8_data <= buffer_data(7 downto 0);
+									crc8_update <= '1';
 									buffer_data <= x"00" & buffer_data(127 downto 8);
 									rs232_sender_stb <= '1';
 									counter <= counter - 1;
@@ -194,7 +260,7 @@ begin
 							else
 								if samplecounter = max_sample_count(ADDR_W - 1 downto 0) then
 									ram_start_sequence <= '0';
-									state <= wait_for_byte;
+									state <= send_checksum;
 								else
 									ram_next_data <= '1';
 									counter <= 4;
@@ -203,8 +269,16 @@ begin
 								end if;
 							end if;
 						end if;
+					when send_checksum =>
+						if read_delay = '1' then
+							if rs232_sender_busy = '0' then
+								rs232_sender_dat <= crc8_checksum;
+								rs232_sender_stb <= '1';
+								state <= wait_for_byte;
+							end if;
+						end if;
 					when dbuffer =>
-						if adc_clock = '1' then
+						if read_delay = '1' then
 							buffer_data <= unsigned(ram_readdata);
 							state <= read_data;
 						end if;

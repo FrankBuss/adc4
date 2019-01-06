@@ -26,7 +26,6 @@ entity ram is
 		avl_writedata : out STD_LOGIC_VECTOR(DATA_W - 1 downto 0);
 		avl_read : out std_logic;
 		avl_write : out std_logic;
-		avl_burstbegin : out std_logic;
 		avl_size : out STD_LOGIC_VECTOR(7 downto 0);
 
 		start_sequence : in std_logic;
@@ -36,16 +35,6 @@ entity ram is
 		readdata : out STD_LOGIC_VECTOR(DATA_W - 1 downto 0);
 		writedata : in STD_LOGIC_VECTOR(DATA_W - 1 downto 0);
 		next_data : in std_logic
-
-		--		avl_waitrequest : in std_logic;
-		--		avl_address : in STD_LOGIC_VECTOR(ADDR_W-1 downto 0);
-		--		avl_readdatavalid: in std_logic;
-		--		avl_readdata : in STD_LOGIC_VECTOR(DATA_W-1 downto 0);
-		--		avl_writedata : in STD_LOGIC_VECTOR(DATA_W-1 downto 0);                     
-		--		avl_read: out std_logic;
-		--		avl_write: out std_logic;
-		--		avl_burstbegin: out std_logic;
-		--		avl_size: in STD_LOGIC_VECTOR(7 downto 0);                     
 	);
 end ram;
 
@@ -61,19 +50,16 @@ architecture Behavior of ram is
 	signal i_wren : STD_LOGIC;
 
 	signal count : unsigned(127 downto 0);
-	signal max_count : unsigned(127 downto 0);
 
 	-- DDR RAM write FIFO
 	signal write_fifo_rdreq : STD_LOGIC;
 	signal write_fifo_wrreq : STD_LOGIC;
 	signal write_fifo_rdempty : STD_LOGIC;
-	signal write_fifo_wrfull : STD_LOGIC;
 
 	-- DDR RAM read FIFO
 	signal read_fifo_aclr : STD_LOGIC;
 	signal read_fifo_rdreq : STD_LOGIC;
 	signal read_fifo_wrreq : STD_LOGIC;
-	signal read_fifo_rdempty : STD_LOGIC;
 	signal read_fifo_wrfull : STD_LOGIC;
 
 	type state_type is (
@@ -96,7 +82,7 @@ begin
 		wrreq => write_fifo_wrreq,
 		q => avl_writedata,
 		rdempty => write_fifo_rdempty,
-		wrfull => write_fifo_wrfull
+		wrfull => open
 		);
 
 	read_fifo_inst : entity read_fifo port map
@@ -108,7 +94,7 @@ begin
 		wrclk => ram_clock,
 		wrreq => read_fifo_wrreq,
 		q => readdata,
-		rdempty => read_fifo_rdempty,
+		rdempty => open,
 		wrfull => read_fifo_wrfull
 		);
 
@@ -117,7 +103,6 @@ begin
 		if rising_edge(ram_clock) then
 			if iRST_n = '0' then
 				avl_write <= '0';
-				max_count <= (others => '0');
 				state <= start;
 				last_start_sequence <= '0';
 				read_fifo_aclr <= '0';
@@ -159,8 +144,8 @@ begin
 						end if;
 						if last_start_sequence = '0' and i_start_sequence = '1' then
 							reading <= read_sequence;
-							--address <= unsigned(start_address);
-							address <= (others => '0');
+							address <= unsigned(start_address);
+							--address <= (others => '0');
 							avl_address <= (others => '0');
 							read_fifo_aclr <= '1';
 						end if;
@@ -186,7 +171,6 @@ begin
 				-- reset everything at the end of a sequence
 				if i_start_sequence = '0' then
 					i_start_ready <= '0';
-					max_count <= (others => '0');
 					state <= start;
 					read_fifo_aclr <= '0';
 					avl_write <= '0';

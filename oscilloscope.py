@@ -9,7 +9,6 @@ from matplotlib import pyplot
 from matplotlib import animation
 
 display_size = 256
-ignore = 512
 
 def write_uint32(w):
     ser.write((w >> 24) & 0xff)
@@ -50,11 +49,11 @@ class DrawFunctions:
         pyplot.show()
         
     def update(self, i):
-        data = adc4.record_and_read(sample_count = self.display_size * 2 + ignore)
+        data = adc4.record_and_read(sample_count = self.display_size * 2)
         volts = adc4.samples_to_voltages(data)
 
         # try to find zero crossing
-        pos = ignore
+        pos = 0
         old = volts[pos][0]
         for i in range(self.display_size):
             v = volts[pos + 1][0]

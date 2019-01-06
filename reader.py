@@ -4,8 +4,11 @@ import adc4
 
 test = False
 
+adc4.samplerate_divider = 4
+print("samplerate: %i MHz" % (25 / (adc4.samplerate_divider + 1)))
+
 # measure and read data
-data = adc4.record_and_read(sample_count = 50*1000*1000, testing = test)
+data = adc4.record_and_read(sample_count = 5*1000*1000, testing = test)
 
 # print data
 max_lines = 50
@@ -13,6 +16,8 @@ words_per_line = 16
 step = 4
 line_length = words_per_line * step
 length = min(max_lines * line_length, len(data))
+print("sample count: %i" % length)
+print(len(data))
 for line in range(0, length, line_length):
     items = []
     for i in range(line, min(line + line_length, length), step):
@@ -38,5 +43,6 @@ volts = adc4.samples_to_voltages(data)
 # ignore first 512 bytes
 volts = volts[512:]
 
-# save as sigrok file
+# save samples
 adc4.save_as_sigrok("data.sr", volts)
+adc4.save_as_csv("data.csv", volts)
