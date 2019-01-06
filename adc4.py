@@ -38,7 +38,7 @@ def read_block(start_address, sample_count):
             crc8.update(data[i])
         checksum = data[len(data) - 1]
         if crc8.checksum != checksum:
-            print('CRC8 error, expected CRC8: %02x, actuacl CRC8: %02x' % (crc8.checksum, checksum))
+            print('CRC8 error, expected CRC8: %02x, actual CRC8: %02x' % (crc8.checksum, checksum))
         else:
             return data[ignore * 4:len(data) - 1]
     raise Exception('3 times checksum error')
@@ -106,7 +106,7 @@ def save_as_sigrok(filename, volts):
         meta = meta + 'sigrok version=0.5.1\n'
         meta = meta + '\n'
         meta = meta + '[device 1]\n'
-        meta = meta + "samplerate=%d MHz\n" % (25 / (samplerate_divider + 1))
+        meta = meta + "samplerate=%f MHz\n" % (25 / (samplerate_divider + 1))
         meta = meta + 'total analog=4\n'
         for i in range(4):
             c = i + 1

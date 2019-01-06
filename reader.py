@@ -4,11 +4,11 @@ import adc4
 
 test = False
 
-adc4.samplerate_divider = 4
-print("samplerate: %i MHz" % (25 / (adc4.samplerate_divider + 1)))
+adc4.samplerate_divider = 1
+print("samplerate: %f MHz" % (25 / (adc4.samplerate_divider + 1)))
 
 # measure and read data
-data = adc4.record_and_read(sample_count = 5*1000*1000, testing = test)
+data = adc4.record_and_read(sample_count = 24*1000*1000, testing = test)
 
 # print data
 max_lines = 50
