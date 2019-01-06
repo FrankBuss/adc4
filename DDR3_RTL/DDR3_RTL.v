@@ -136,11 +136,6 @@ debounce d1(
 	
 	
 
-//DDR3 Verify 
-wire ddr3_test_pass/*synthesis keep*/;
-wire ddr3_test_fail/*synthesis keep*/;
-wire ddr3_test_complete/*synthesis keep*/;
-
 /////////////////// DDR3(A) Test ///////////////////
 wire         ddr3_avl_ready;                  //          	 .avl.waitrequest
 wire [25:0]  ddr3_avl_addr;                   //             .address
@@ -203,9 +198,9 @@ ram ram_inst(
 );
 
 assign LED[0] = ~(KEY[0]);
-assign LED[1] =  (ddr3_test_pass)?1'b1:1'b0;
-assign LED[2] =  (ddr3_test_complete )?1'b1:1'b0;
-assign LED[3] =  (ddr3_test_fail)?1'b1:1'b0;
+assign LED[1] =  1'b0;
+assign LED[2] =  1'b0;
+assign LED[3] =  1'b0;
 assign LED[7] =  heart_beat[23];
 
 reg [23:0] heart_beat;

@@ -3,10 +3,11 @@
  <debug showDebugMenu="0" />
  <systemtable filter="All Interfaces">
   <columns>
-   <connections preferredWidth="95" />
+   <connections preferredWidth="31" />
    <irq preferredWidth="34" />
   </columns>
  </systemtable>
- <library expandedCategories="Library,Project/TERASIC,Project" />
+ <library expandedCategories="Library,Project" />
  <window width="1584" height="978" x="0" y="0" />
+ <generation synthesis="VHDL" />
 </preferences>

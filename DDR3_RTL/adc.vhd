@@ -36,7 +36,7 @@ architecture Behavior of adc is
 	subtype byte is unsigned(7 downto 0);
 
 	constant system_speed : natural := 50e6;
-	constant baudrate : natural := 1e6;
+	constant baudrate : natural := 500000;
 
 	signal rs232_receiver_dat : byte;
 	signal rs232_receiver_stb : std_logic;
@@ -47,6 +47,7 @@ architecture Behavior of adc is
 
 	type state_type is (
 		wait_for_byte,
+		read_sample_count,
 		start_measurement,
 		measure,
 		start_read,
@@ -54,6 +55,7 @@ architecture Behavior of adc is
 		dbuffer);
 
 	signal state : state_type;
+	signal command : state_type;
 
 	function char_to_byte(c : character)
 		return byte is
@@ -63,12 +65,18 @@ architecture Behavior of adc is
 
 	signal counter : natural range 0 to 16;
 
-	signal samplecounter : unsigned(DATA_W - 1 downto 0);
+	signal samplecounter : unsigned(ADDR_W - 1 downto 0);
 	signal buffer_data : unsigned(DATA_W - 1 downto 0);
 
 	signal adc_clock : std_logic;
 	signal adc_in0 : std_logic_vector(31 downto 0);
 	signal adc_in1 : std_logic_vector(31 downto 0);
+
+	signal testcounter : unsigned(31 downto 0);
+
+	signal max_sample_count : unsigned(31 downto 0);
+
+	signal i_ram_writedata : STD_LOGIC_VECTOR(DATA_W - 1 downto 0);
 
 begin
 
@@ -94,7 +102,8 @@ begin
 	process (iCLK)
 	begin
 		if rising_edge(iCLK) then
-			if iRST_n = '0' then
+			if iRST_n = '0' or (rs232_receiver_stb = '1' and (state = read_data or state = dbuffer)) then
+				-- the reset signal, and any incoming transfer, resets the state machine
 				state <= wait_for_byte;
 				ram_start_sequence <= '0';
 			else
@@ -110,32 +119,57 @@ begin
 				case state is
 					when wait_for_byte =>
 						if rs232_receiver_stb = '1' then
-							samplecounter <= (others => '0');
+							samplecounter <= to_unsigned(1, ADDR_W);
 							ram_start_address <= (others => '0');
 							ram_start_sequence <= '1';
+							counter <= 4;
 							case rs232_receiver_dat is
 								when char_to_byte('s') =>
 									ram_read_sequence <= '0';
-									state <= start_measurement;
+									testcounter <= (others => '0');
+									command <= start_measurement;
+									state <= read_sample_count;
+								when char_to_byte('t') =>
+									ram_read_sequence <= '0';
+									testcounter <= x"00000042";
+									command <= start_measurement;
+									state <= read_sample_count;
 								when char_to_byte('r') =>
 									ram_read_sequence <= '1';
-									state <= start_read;
-								when others => null;
+									command <= start_read;
+									state <= read_sample_count;
+								when others =>
+									ram_start_sequence <= '0';
 							end case;
+						end if;
+					when read_sample_count =>
+						if counter = 0 then
+							state <= command;
+						else
+							if rs232_receiver_stb = '1' then
+								max_sample_count <= max_sample_count(23 downto 0) & rs232_receiver_dat;
+								counter <= counter - 1;
+							end if;
 						end if;
 					when start_measurement =>
 						if ram_start_ready = '1' then
 							state <= measure;
 						end if;
 					when measure =>
-						if samplecounter(15 downto 0) = x"1ff0" then
+						if samplecounter = max_sample_count(ADDR_W - 1 downto 0) then
 							rs232_sender_dat <= char_to_byte('.');
 							rs232_sender_stb <= '1';
 							ram_start_sequence <= '0';
 							state <= wait_for_byte;
 						else
 							if adc_clock = '1' then
-								ram_writedata <= x"0000000000000000" & adc_in1 & adc_in0;
+								if testcounter = x"00000000" then
+									ram_writedata <= i_ram_writedata;
+									i_ram_writedata <= std_logic_vector(to_unsigned(0, 64)) & adc_in1 & adc_in0;
+								else
+									ram_writedata <= std_logic_vector(to_unsigned(0, 96)) & std_logic_vector(testcounter);
+									testcounter <= testcounter + 1;
+								end if;
 								ram_next_data <= '1';
 								samplecounter <= samplecounter + 1;
 							end if;
@@ -144,7 +178,7 @@ begin
 						if adc_clock = '1' then
 							if ram_start_ready = '1' then
 								ram_next_data <= '1';
-								counter <= 16;
+								counter <= 4;
 								state <= read_data;
 							end if;
 						end if;
@@ -158,12 +192,12 @@ begin
 									counter <= counter - 1;
 								end if;
 							else
-								if samplecounter(15 downto 0) = x"1ff0" then
+								if samplecounter = max_sample_count(ADDR_W - 1 downto 0) then
 									ram_start_sequence <= '0';
 									state <= wait_for_byte;
 								else
 									ram_next_data <= '1';
-									counter <= 16;
+									counter <= 4;
 									samplecounter <= samplecounter + 1;
 									state <= dbuffer;
 								end if;
